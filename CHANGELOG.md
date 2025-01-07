@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+## 0.2.5 - 2025-01-07
+
+### Fixed
+- FuseSoC core file updated to 0.2.5.
+
 ## 0.2.4 - 2024-12-04
 
 ### Fixed
