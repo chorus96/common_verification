@@ -10,7 +10,7 @@
 
 // Clock and Reset Generator
 module clk_rst_gen #(
-  parameter time          ClkPeriod = 0ps, // minimum: 2ps
+  parameter time          ClkPeriod    = 0ps, // minimum: 2ps
   parameter int unsigned  RstClkCycles = 0
 ) (
   output logic clk_o,
@@ -18,44 +18,44 @@ module clk_rst_gen #(
 );
 
   logic clk;
-
-  // Clock Generation
-  initial begin
+  initial begin : clock_generation
     clk = 1'b0;
-  end
-  always begin
-    // Emit rising clock edge.
-    clk = 1'b1;
-    // Wait for at most half the clock period before emitting falling clock edge.  Due to integer
-    // division, this is not always exactly half the clock period but as close as we can get.
-    #(ClkPeriod / 2);
-    // Emit falling clock edge.
-    clk = 1'b0;
-    // Wait for remainder of clock period before continuing with next cycle.
-    #((ClkPeriod + 1) / 2);
+    while (1) begin
+      // Emit rising clock edge.
+      clk = 1'b1;
+      // Wait for at most half the clock period before emitting falling clock edge.
+      // Due to integer division
+      // this is not always exactly half the clock period but as close as we can get.
+      #(ClkPeriod / 2);
+      // Emit falling clock edge.
+      clk = 1'b0;
+      // Wait for remainder of clock period before continuing with next cycle.
+      #((ClkPeriod + 1) / 2);
+    end
   end
   assign clk_o = clk;
 
-  // Reset Generation
-  initial begin
+  logic rst_n;
+  initial begin : reset_generation
     static int unsigned rst_cnt = 0;
-    rst_no = 1'b0;
+    rst_n = 1'b0;
     #(ClkPeriod / 2); // Start counting clock cycles on first complete cycle.
     while (rst_cnt < RstClkCycles) begin
       @(posedge clk);
       rst_cnt++;
     end
-    rst_no = 1'b1;
+    rst_n = 1'b1;
   end
+  assign rst_no = rst_n;
 
   // Validate parameters.
 `ifndef VERILATOR
-  initial begin: validate_params
-    assert (ClkPeriod >= 2ps)
+  initial begin : validate_params
+    assert(ClkPeriod >= 2ps)
       else $fatal(1, "The clock period must be at least 2ps!");
       // Reason: Gets divided by two, and some simulators do not support non-integer time steps, so
       // if the time unit is 1ps, this would fail.
-    assert (RstClkCycles > 0)
+    assert(RstClkCycles > 0)
       else $fatal(1, "The number of clock cycles in reset must be greater than 0!");
   end
 `endif
