@@ -3,6 +3,28 @@
 This repository contains commonly used SystemVerilog modules and classes for verification.  This
 code is generally not synthesizable.
 
+## Dependencies
+
+This project uses [Bender](https://github.com/pulp-platform/bender) for dependency management.
+
+### Installing Bender
+
+```bash
+cargo install bender
+```
+
+Or using the Makefile target:
+
+```bash
+make install-bender
+```
+
+After installation, resolve dependencies with:
+
+```bash
+bender update
+```
+
 ## Contents
 
 ### Basic Modules

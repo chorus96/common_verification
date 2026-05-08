@@ -1,8 +1,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
 VERILATOR ?= verilator
+BENDER ?= bender
 
 all: tb_clk_rst_gen
+
+install-bender:
+	cargo install bender
 
 distclean:
 	rm -fr obj_dir
