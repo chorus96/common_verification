@@ -6,26 +6,24 @@
 // - Andreas Kurth <akurth@iis.ee.ethz.ch>
 
 module tb_clk_rst_gen #(
-  parameter time TbClkPeriod = 10ns,
-  parameter int unsigned TbClkCycles = 12,
+  parameter time         TbClkPeriod    = 1ns, // 10ns,
+  parameter int unsigned TbClkCycles    = 12,
   parameter int unsigned TbRstClkCycles = 7,
-  parameter bit TbDebugPrint = 1'b0
+  parameter bit          TbDebugPrint   = 1'b0
 ) ();
 
-  logic clk,
-        rst_n;
+  logic clk, rst_n;
 
   // DUT
   clk_rst_gen #(
-    .ClkPeriod    (TbClkPeriod),
-    .RstClkCycles (TbRstClkCycles)
+    .ClkPeriod   (TbClkPeriod),
+    .RstClkCycles(TbRstClkCycles)
   ) i_dut (
-    .clk_o  (clk),
-    .rst_no (rst_n)
+    .clk_o (clk),
+    .rst_no(rst_n)
   );
 
-  int unsigned  clk_cnt,
-                rst_cnt;
+  int unsigned clk_cnt, rst_cnt;
   initial begin
     clk_cnt = 0;
     rst_cnt = 0;
@@ -43,12 +41,12 @@ module tb_clk_rst_gen #(
 
   initial begin
     static time TB_RUN_TIME = TbClkCycles * TbClkPeriod + (TbClkPeriod / 2);
-    assert (TbRstClkCycles < TbClkCycles)
+    assert(TbRstClkCycles < TbClkCycles)
       else $fatal(1, "The number of clock cycles must be larger than the number of reset cycles!");
     #TB_RUN_TIME;
-    assert (clk_cnt == TbClkCycles)
+    assert(clk_cnt == TbClkCycles)
       else $error("Counted %0d instead of %0d clock cycles!", clk_cnt, TbClkCycles);
-    assert (rst_cnt == TbRstClkCycles)
+    assert(rst_cnt == TbRstClkCycles)
       else $error("Counted %0d instead of %0d reset clock cycles!", rst_cnt, TbRstClkCycles);
     $finish();
   end
